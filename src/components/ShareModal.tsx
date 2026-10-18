@@ -11,12 +11,12 @@ export const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose }) => {
 
   if (!isOpen) return null;
 
-  const currentUrl = typeof window !== 'undefined' ? window.location.href : 'https://wisuda134-vica.its.ac.id';
+  const shareUrl = 'https://my-grad-inv.vercel.app/';
 
-  const shareText = `Halo! Kamu diundang ke Wisuda 134 ITS - Vica! 🎓✨\n\n🗓️ Minggu, 25 Oktober 2026\n⏰ 13.00 - 14.30 WIB\n📍 Departemen Statistika Bisnis ITS\n\nYuk rame-rame dateng dan rayain bareng! Info lengkap & RSVP klik link ini:\n${currentUrl}`;
+  const shareText = `Halo! Kamu diundang ke Wisuda 134 ITS - Vica! 🎓✨\n\n🗓️ Minggu, 25 Oktober 2026\n⏰ 13.00 - 14.30 WIB\n📍 Departemen Statistika Bisnis ITS\n\nYuk rame-rame dateng dan rayain bareng! Info lengkap & RSVP klik link ini:\n${shareUrl}`;
 
   const handleCopyLink = () => {
-    navigator.clipboard.writeText(currentUrl);
+    navigator.clipboard.writeText(shareUrl);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -91,7 +91,7 @@ export const ShareModal: React.FC<ShareModalProps> = ({ isOpen, onClose }) => {
             <input
               type="text"
               readOnly
-              value={currentUrl}
+              value={shareUrl}
               className="bg-transparent text-xs font-bold text-neutral-700 px-3 py-1 flex-1 outline-none truncate"
             />
             <button
