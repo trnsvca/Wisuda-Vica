@@ -66,6 +66,7 @@ export default function App() {
   const [isRSVPOpen, setIsRSVPOpen] = useState(false);
   const [isShareOpen, setIsShareOpen] = useState(false);
   const [isLocationOpen, setIsLocationOpen] = useState(false);
+  const [highlightedWishId, setHighlightedWishId] = useState<string | null>(null);
 
   // User custom wishes (submitted via form) stored separately from INITIAL_WISHES
   const [customWishes, setCustomWishes] = useState<Wish[]>(() => {
@@ -204,6 +205,7 @@ export default function App() {
       timestamp: 'Baru saja',
       likes: 1,
     };
+    setHighlightedWishId(newWish.id);
     setCustomWishes((prev) => {
       const updated = [newWish, ...prev];
       try {
@@ -217,6 +219,15 @@ export default function App() {
     if (soundEnabled) {
       playCelebrationSound();
     }
+
+    // Scroll smoothly to Buku Ucapan & Doa so the user immediately sees their newly posted wish
+    setTimeout(() => {
+      document.getElementById('buku-ucapan')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 450);
+
+    setTimeout(() => {
+      setHighlightedWishId(null);
+    }, 4500);
   };
 
   const handleLikeWish = (wishId: string) => {
@@ -404,6 +415,7 @@ export default function App() {
           wishes={wishes}
           onLikeWish={handleLikeWish}
           onOpenRSVP={() => setIsRSVPOpen(true)}
+          highlightedWishId={highlightedWishId}
         />
 
         {/* Foot Warning Joke */}

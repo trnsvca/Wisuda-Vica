@@ -70,7 +70,7 @@ export const RSVPModal: React.FC<RSVPModalProps> = ({
               YEEAY, TERIMA KASIH!
             </h3>
             <p className="font-bold text-neutral-600 mt-2">
-              Konfirmasi & ucapanmu sudah tercatat. Ditunggu kedatangannya ya!
+              Ucapanmu sudah tampil di Buku Ucapan & Doa!
             </p>
           </div>
         ) : (

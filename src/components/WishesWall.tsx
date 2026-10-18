@@ -6,12 +6,14 @@ interface WishesWallProps {
   wishes: Wish[];
   onLikeWish: (id: string) => void;
   onOpenRSVP: () => void;
+  highlightedWishId?: string | null;
 }
 
 export const WishesWall: React.FC<WishesWallProps> = ({
   wishes,
   onLikeWish,
   onOpenRSVP,
+  highlightedWishId,
 }) => {
   const getAttendanceBadge = (status: Wish['attendance']) => {
     switch (status) {
@@ -39,7 +41,7 @@ export const WishesWall: React.FC<WishesWallProps> = ({
   const attendanceCount = wishes.filter((w) => w.attendance === 'dateng').length;
 
   return (
-    <div className="w-full mt-4">
+    <div id="buku-ucapan" className="w-full mt-4 scroll-mt-6">
       <div className="flex items-center justify-between gap-2 mb-3">
         <div className="flex items-center gap-2">
           <MessageSquareHeart className="w-6 h-6 text-[#ff4f9a]" />
@@ -56,9 +58,13 @@ export const WishesWall: React.FC<WishesWallProps> = ({
         {wishes.map((w, idx) => (
           <div
             key={w.id}
-            className="bg-white text-[#1b1b4b] border-[2.5px] border-[var(--line)] brutal-shadow-sm rounded-2xl p-3.5 transition-transform hover:-translate-y-0.5"
+            className={`bg-white text-[#1b1b4b] border-[2.5px] border-[var(--line)] brutal-shadow-sm rounded-2xl p-3.5 transition-all hover:-translate-y-0.5 ${
+              highlightedWishId === w.id
+                ? 'ring-4 ring-[#ff4f9a] bg-pink-50 scale-[1.02]'
+                : ''
+            }`}
             style={{
-              transform: `rotate(${idx % 2 === 0 ? '-0.5deg' : '0.5deg'})`,
+              transform: highlightedWishId === w.id ? 'none' : `rotate(${idx % 2 === 0 ? '-0.5deg' : '0.5deg'})`,
             }}
           >
             <div className="flex items-start justify-between gap-2">
