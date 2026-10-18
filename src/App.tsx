@@ -100,6 +100,16 @@ export default function App() {
     }
   });
 
+  // Track deleted wish IDs
+  const [deletedWishIds, setDeletedWishIds] = useState<string[]>(() => {
+    try {
+      const saved = localStorage.getItem('vica_wisuda_deleted_ids');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+
   // Combined wishes: custom user wishes on top, followed by current INITIAL_WISHES
   const wishes: Wish[] = [
     ...customWishes.map((w) => ({
@@ -110,7 +120,7 @@ export default function App() {
       ...w,
       likes: (w.likes || 1) + (likesMap[w.id] || 0),
     })),
-  ];
+  ].filter((w) => !deletedWishIds.includes(w.id));
 
   // Combined gifts with base counts from INITIAL_GIFTS plus user interaction
   const gifts: VirtualGift[] = INITIAL_GIFTS.map((g) => ({
@@ -240,6 +250,34 @@ export default function App() {
       }
       return updated;
     });
+    if (soundEnabled) {
+      playPopSound();
+    }
+  };
+
+  const handleDeleteWish = (wishId: string) => {
+    // Remove from custom wishes if present
+    setCustomWishes((prev) => {
+      const updated = prev.filter((w) => w.id !== wishId);
+      try {
+        localStorage.setItem('vica_wisuda_custom_wishes', JSON.stringify(updated));
+      } catch {
+        // Ignore
+      }
+      return updated;
+    });
+
+    // Mark as deleted so even default wishes can be dismissed
+    setDeletedWishIds((prev) => {
+      const updated = [...prev, wishId];
+      try {
+        localStorage.setItem('vica_wisuda_deleted_ids', JSON.stringify(updated));
+      } catch {
+        // Ignore
+      }
+      return updated;
+    });
+
     if (soundEnabled) {
       playPopSound();
     }
@@ -415,6 +453,7 @@ export default function App() {
           wishes={wishes}
           onLikeWish={handleLikeWish}
           onOpenRSVP={() => setIsRSVPOpen(true)}
+          onDeleteWish={handleDeleteWish}
           highlightedWishId={highlightedWishId}
         />
 
