@@ -49,8 +49,8 @@ export const RSVPModal: React.FC<RSVPModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
-      <div className="relative w-full max-w-md bg-white text-[#1b1b4b] border-[3.5px] border-[var(--line)] brutal-shadow-lg rounded-3xl p-6 sm:p-7 overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
+      <div className="relative w-full max-w-md bg-white text-[#1b1b4b] border-[3px] sm:border-[3.5px] border-[var(--line)] brutal-shadow-lg rounded-2xl sm:rounded-3xl p-5 sm:p-7 max-h-[92vh] overflow-y-auto">
         {/* Close Button */}
         <button
           type="button"

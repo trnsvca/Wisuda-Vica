@@ -24,11 +24,9 @@ export const GraduationCap: React.FC<GraduationCapProps> = ({ onToss }) => {
       aria-label="Graduation Cap"
     >
       <svg
-        width="90"
-        height="80"
         viewBox="0 0 100 88"
         aria-hidden="true"
-        className="filter drop-shadow-[4px_4px_0_var(--line)]"
+        className="w-16 h-14 sm:w-[86px] sm:h-[76px] filter drop-shadow-[3px_3px_0_var(--line)] sm:drop-shadow-[4px_4px_0_var(--line)]"
       >
         {/* Cap Skull */}
         <path d="M26 42 V64 Q50 80 74 64 V42 L50 54 Z" fill="#1b1b4b" />

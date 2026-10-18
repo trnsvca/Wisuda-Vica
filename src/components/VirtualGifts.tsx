@@ -27,22 +27,22 @@ export const VirtualGifts: React.FC<VirtualGiftsProps> = ({ gifts, onSendGift })
         Belum sempat bawa kado fisik? Kirim kado virtual buat semangatin Vica! (Bisa diklik berkali-kali)
       </p>
 
-      <div className="grid grid-cols-5 gap-1.5 sm:gap-2">
+      <div className="grid grid-cols-5 gap-1 sm:gap-2">
         {gifts.map((gift) => (
           <button
             key={gift.id}
             type="button"
             onClick={() => onSendGift(gift.id)}
-            className="flex flex-col items-center justify-center p-2 rounded-xl bg-neutral-50 hover:bg-[#ffe14d] border-2 border-[var(--line)] transition-all hover:scale-105 active:scale-95 cursor-pointer brutal-shadow-sm group"
+            className="flex flex-col items-center justify-center p-1 sm:p-2 rounded-xl bg-neutral-50 hover:bg-[#ffe14d] border-2 border-[var(--line)] transition-all hover:scale-105 active:scale-95 cursor-pointer brutal-shadow-sm group"
             title={`Kirim ${gift.name}`}
           >
-            <span className="text-2xl sm:text-3xl transition-transform group-hover:scale-125 group-active:rotate-12">
+            <span className="text-xl sm:text-3xl transition-transform group-hover:scale-125 group-active:rotate-12">
               {gift.icon}
             </span>
-            <span className="text-[10px] sm:text-xs font-extrabold mt-1 text-center line-clamp-1">
+            <span className="text-[9px] sm:text-xs font-extrabold mt-0.5 sm:mt-1 text-center line-clamp-1 leading-tight">
               {gift.name}
             </span>
-            <span className="mt-0.5 text-[10px] font-black bg-white px-1.5 py-0.2 rounded-full border border-[var(--line)]">
+            <span className="mt-0.5 text-[9px] sm:text-[10px] font-black bg-white px-1.5 py-0.2 rounded-full border border-[var(--line)]">
               {gift.count}
             </span>
           </button>

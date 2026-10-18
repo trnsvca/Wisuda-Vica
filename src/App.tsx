@@ -307,40 +307,41 @@ export default function App() {
       </header>
 
       {/* Main Wrap */}
-      <main className="relative z-10 max-w-[560px] mx-auto px-4 pb-16 pt-2 flex flex-col items-center gap-5">
+      {/* Main Wrap */}
+      <main className="relative z-10 max-w-[560px] mx-auto px-3.5 sm:px-4 pb-16 pt-1 sm:pt-2 flex flex-col items-center gap-4 sm:gap-5 w-full">
         {/* Floating Cap and Pill Badge */}
-        <div className="relative w-full flex items-center justify-center pt-2">
-          <div className="absolute left-1 -top-1">
+        <div className="relative w-full flex items-center justify-center pt-1 sm:pt-2">
+          <div className="absolute left-0 sm:left-1 -top-1">
             <GraduationCap onToss={handleCapToss} />
           </div>
 
-          <div className="bg-[var(--line)] text-white font-extrabold text-[15px] sm:text-[17px] tracking-[2px] py-1.5 px-6 rounded-full -rotate-4 brutal-shadow-sm border-2 border-white select-none">
+          <div className="bg-[var(--line)] text-white font-extrabold text-[13px] sm:text-[15px] md:text-[17px] tracking-[1.5px] sm:tracking-[2px] py-1 sm:py-1.5 px-4 sm:px-6 rounded-full -rotate-4 brutal-shadow-sm border-2 border-white select-none">
             PSST, KAMU DIUNDANG!
           </div>
         </div>
 
         {/* Hero Section */}
         <section
-          className="relative w-full text-center mt-1 select-none"
+          className="relative w-full text-center mt-1 select-none overflow-visible"
           aria-label="Undangan Kelulusan"
         >
-          <h1 className="font-bagel text-white text-[76px] sm:text-[100px] md:text-[128px] leading-[0.9] -rotate-3 stroke-title tracking-tight m-0">
+          <h1 className="font-bagel text-white text-[clamp(62px,19vw,128px)] leading-[0.9] -rotate-3 stroke-title tracking-tight m-0">
             VICA
           </h1>
           <div
-            className="font-bagel text-[#ff4f9a] text-[76px] sm:text-[100px] md:text-[128px] leading-[0.9] rotate-2 stroke-title tracking-tight m-0"
+            className="font-bagel text-[#ff4f9a] text-[clamp(62px,19vw,128px)] leading-[0.9] rotate-2 stroke-title tracking-tight m-0"
             role="presentation"
           >
             LULUS!
           </div>
 
           {/* Sticker YEAY! */}
-          <div className="absolute left-1 top-[34%] bg-white text-[#ff4f9a] font-bagel text-2xl sm:text-[26px] leading-[1.4] px-3.5 rounded-2xl rounded-bl-xs border-3 border-[var(--line)] brutal-shadow -rotate-12 transition-transform hover:scale-110 cursor-pointer">
+          <div className="absolute left-0 sm:left-1 top-[30%] sm:top-[34%] bg-white text-[#ff4f9a] font-bagel text-lg sm:text-2xl md:text-[26px] leading-[1.3] px-2.5 sm:px-3.5 py-0.5 rounded-xl sm:rounded-2xl rounded-bl-xs border-2 sm:border-3 border-[var(--line)] brutal-shadow -rotate-12 transition-transform hover:scale-110 cursor-pointer">
             YEAY!
           </div>
 
           {/* Sticker WAJIB DATENG! */}
-          <div className="absolute right-0 top-[20%] w-[82px] sm:w-[96px] md:w-[104px] aspect-square rounded-full bg-[#3d5afe] text-white flex items-center justify-center text-center font-extrabold text-sm sm:text-base md:text-[18px] leading-tight rotate-14 border-3 border-[var(--line)] brutal-shadow transition-transform hover:scale-110 cursor-pointer">
+          <div className="absolute right-0 top-[18%] sm:top-[20%] w-[68px] sm:w-[88px] md:w-[104px] aspect-square rounded-full bg-[#3d5afe] text-white flex items-center justify-center text-center font-extrabold text-[11px] sm:text-sm md:text-[18px] leading-tight rotate-14 border-2 sm:border-3 border-[var(--line)] brutal-shadow transition-transform hover:scale-110 cursor-pointer">
             WAJIB
             <br />
             DATENG!
@@ -348,12 +349,12 @@ export default function App() {
         </section>
 
         {/* Tag Wisuda 134 ITS */}
-        <div className="bg-[#3d5afe] text-white border-3 border-[var(--line)] brutal-shadow rounded-2xl py-1 px-6 text-xl sm:text-2xl font-extrabold rotate-2 hover:rotate-0 transition-transform cursor-default">
+        <div className="bg-[#3d5afe] text-white border-2 sm:border-3 border-[var(--line)] brutal-shadow rounded-2xl py-1 px-5 sm:px-6 text-lg sm:text-2xl font-extrabold rotate-2 hover:rotate-0 transition-transform cursor-default">
           Wisuda 134 ITS
         </div>
 
         {/* Lead Greeting */}
-        <p className="text-center text-lg sm:text-xl font-bold leading-snug my-1 text-[var(--ink)]">
+        <p className="text-center text-base sm:text-xl font-bold leading-snug my-0.5 text-[var(--ink)]">
           Yuk rame-rame rayain hari spesial ini!
         </p>
 
@@ -364,12 +365,12 @@ export default function App() {
         <EventCards onOpenMapGuide={() => setIsLocationOpen(true)} />
 
         {/* Action Buttons */}
-        <div className="flex flex-wrap gap-3 justify-center w-full mt-1">
+        <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-3 justify-center w-full max-w-sm sm:max-w-none mt-1">
           {/* Main RSVP Confetti Button */}
           <button
             type="button"
             onClick={handleRSVPClick}
-            className="font-baloo font-bold text-lg sm:text-xl min-h-[50px] px-6 py-2 rounded-full border-3 border-[var(--line)] brutal-shadow brutal-shadow-active bg-[#ff4f9a] text-white cursor-pointer inline-flex items-center justify-center gap-2 transition-transform hover:scale-105 active:scale-95"
+            className="font-baloo font-bold text-base sm:text-xl min-h-[48px] sm:min-h-[50px] px-5 sm:px-6 py-2 rounded-full border-3 border-[var(--line)] brutal-shadow brutal-shadow-active bg-[#ff4f9a] text-white cursor-pointer inline-flex items-center justify-center gap-2 transition-transform hover:scale-105 active:scale-95 w-full sm:w-auto"
           >
             <PartyPopper className="w-5 h-5" />
             <span>{rsvpButtonText}</span>
@@ -380,7 +381,7 @@ export default function App() {
             target="_blank"
             rel="noopener noreferrer"
             href={`https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent('Wisuda 134 ITS - Vica')}&dates=20261025T130000/20261025T143000&ctz=Asia/Jakarta&location=${encodeURIComponent('Departemen Statistika Bisnis ITS')}&details=${encodeURIComponent('Acara Wisuda 134 ITS - Trian Servica S.Tr.Stat. Ayo rayain bareng!')}`}
-            className="font-baloo font-bold text-lg sm:text-xl min-h-[50px] px-6 py-2 rounded-full border-3 border-[var(--line)] brutal-shadow brutal-shadow-active bg-white text-[#1b1b4b] cursor-pointer inline-flex items-center justify-center gap-2 transition-transform hover:scale-105 active:scale-95"
+            className="font-baloo font-bold text-base sm:text-xl min-h-[48px] sm:min-h-[50px] px-5 sm:px-6 py-2 rounded-full border-3 border-[var(--line)] brutal-shadow brutal-shadow-active bg-white text-[#1b1b4b] cursor-pointer inline-flex items-center justify-center gap-2 transition-transform hover:scale-105 active:scale-95 w-full sm:w-auto"
           >
             <Calendar className="w-5 h-5 text-[#3d5afe]" />
             <span>Simpan ke kalender</span>
@@ -388,7 +389,7 @@ export default function App() {
         </div>
 
         {/* Promo Badge */}
-        <div className="bg-[#ff4f9a] text-white border-3 border-[var(--line)] brutal-shadow rounded-full py-1.5 px-6 font-extrabold text-sm sm:text-base -rotate-5 transition-transform hover:rotate-0 cursor-pointer">
+        <div className="bg-[#ff4f9a] text-white border-2 sm:border-3 border-[var(--line)] brutal-shadow rounded-full py-1 sm:py-1.5 px-4 sm:px-6 font-extrabold text-xs sm:text-base -rotate-5 transition-transform hover:rotate-0 cursor-pointer text-center">
           Gratis foto sama seleb! (Aku)
         </div>
 
