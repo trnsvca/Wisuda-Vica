@@ -1,0 +1,8 @@
+{
+  "name": "Undangan Wisuda 134 ITS - Vica",
+  "description": "Undangan Wisuda 134 ITS Vica: Minggu, 25 Oktober 2026 di Departemen Statistika Bisnis ITS. Rayakan kelulusan bersama!",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

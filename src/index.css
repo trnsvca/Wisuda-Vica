@@ -1,0 +1,69 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg: #ffe14d;
+    --ink: #1b1b4b;
+    --line: #1b1b4b;
+    --dot: rgba(27, 27, 75, 0.14);
+    --pink: #ff4f9a;
+    --blue: #3d5afe;
+    --mint: #5ce1b5;
+  }
+
+  [data-theme="dark"] {
+    --bg: #2b2a6e;
+    --ink: #f6f2e6;
+    --line: #0a0a24;
+    --dot: rgba(255, 255, 255, 0.09);
+  }
+
+  body {
+    background-color: var(--bg);
+    color: var(--ink);
+    font-family: 'Baloo 2', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    overflow-x: hidden;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+}
+
+.font-bagel {
+  font-family: 'Bagel Fat One', 'Baloo 2', cursive, sans-serif;
+}
+
+.font-baloo {
+  font-family: 'Baloo 2', system-ui, sans-serif;
+}
+
+/* Neo-brutalist custom utilities */
+.stroke-title {
+  -webkit-text-stroke: 3px var(--line);
+  text-shadow: 6px 6px 0 var(--line);
+}
+
+.stroke-title-sm {
+  -webkit-text-stroke: 2px var(--line);
+  text-shadow: 3px 3px 0 var(--line);
+}
+
+.brutal-shadow {
+  box-shadow: 4px 4px 0 var(--line);
+}
+
+.brutal-shadow-sm {
+  box-shadow: 3px 3px 0 var(--line);
+}
+
+.brutal-shadow-lg {
+  box-shadow: 6px 6px 0 var(--line);
+}
+
+.brutal-shadow-active:active {
+  transform: translate(3px, 3px);
+  box-shadow: 1px 1px 0 var(--line);
+}
+
+.pattern-dots {
+  background-image: radial-gradient(var(--dot) 2px, transparent 2.5px);
+  background-size: 22px 22px;
+}
