@@ -118,6 +118,10 @@ export default function App() {
   }));
 
   useEffect(() => {
+    document.title = "Vica's Grad Inv";
+  }, []);
+
+  useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
 
