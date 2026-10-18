@@ -125,9 +125,10 @@ export const WishesWall: React.FC<WishesWallProps> = ({
                 "{w.message}"
               </p>
 
-              <div className="mt-2 flex items-center justify-between text-[10px] text-neutral-400 font-bold">
-                <span>{isSelected ? 'Klik lagi untuk menutup' : 'Klik kartu untuk opsi'}</span>
-                <span>{w.timestamp}</span>
+              <div className="mt-2 text-right">
+                <span className="text-[10px] text-neutral-400 font-bold">
+                  {w.timestamp}
+                </span>
               </div>
             </div>
           );
