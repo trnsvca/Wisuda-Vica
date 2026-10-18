@@ -29,6 +29,18 @@ import { ShareModal } from './components/ShareModal.tsx';
 import { LocationModal } from './components/LocationModal.tsx';
 import { playPopSound, playCelebrationSound, playPartyHornSound } from './utils/audio.ts';
 import { Wish, VirtualGift } from './types.ts';
+import {
+  collection,
+  doc,
+  onSnapshot,
+  setDoc,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  increment,
+  serverTimestamp,
+} from 'firebase/firestore';
+import { db } from './firebase.ts';
 
 const INITIAL_WISHES: Wish[] = [
   {
@@ -68,65 +80,102 @@ export default function App() {
   const [isLocationOpen, setIsLocationOpen] = useState(false);
   const [highlightedWishId, setHighlightedWishId] = useState<string | null>(null);
 
-  // User custom wishes (submitted via form) stored separately from INITIAL_WISHES
-  const [customWishes, setCustomWishes] = useState<Wish[]>(() => {
-    try {
-      localStorage.removeItem('vica_wisuda_wishes');
-      const saved = localStorage.getItem('vica_wisuda_custom_wishes');
-      return saved ? JSON.parse(saved) : [];
-    } catch {
-      return [];
-    }
-  });
+  // Realtime shared wishes and gifts synchronized via Firestore
+  const [wishes, setWishes] = useState<Wish[]>(INITIAL_WISHES);
+  const [gifts, setGifts] = useState<VirtualGift[]>(INITIAL_GIFTS);
 
-  // Track likes for wishes
-  const [likesMap, setLikesMap] = useState<Record<string, number>>(() => {
-    try {
-      const saved = localStorage.getItem('vica_wisuda_likes');
-      return saved ? JSON.parse(saved) : {};
-    } catch {
-      return {};
-    }
-  });
+  // Subscribe to real-time Firestore updates for Wishes
+  useEffect(() => {
+    const wishesRef = collection(db, 'wishes');
+    const unsubscribe = onSnapshot(
+      wishesRef,
+      (snapshot) => {
+        if (snapshot.empty) {
+          // Initialize remote database with initial wishes if empty
+          INITIAL_WISHES.forEach((wish) => {
+            setDoc(doc(db, 'wishes', wish.id), {
+              name: wish.name,
+              attendance: wish.attendance,
+              message: wish.message,
+              emoji: wish.emoji,
+              likes: wish.likes,
+              createdAt: new Date().toISOString(),
+            }).catch(() => {});
+          });
+        } else {
+          const list: Wish[] = snapshot.docs.map((d) => {
+            const data = d.data();
+            let timeStr = 'Hari ini';
+            if (data.createdAt) {
+              try {
+                timeStr = new Date(data.createdAt).toLocaleDateString('id-ID', {
+                  day: 'numeric',
+                  month: 'short',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                });
+              } catch {
+                timeStr = 'Hari ini';
+              }
+            }
+            return {
+              id: d.id,
+              name: data.name || 'Tamu',
+              attendance: data.attendance || 'dateng',
+              message: data.message || '',
+              emoji: data.emoji || '🎓',
+              likes: Number(data.likes || 1),
+              timestamp: timeStr,
+            };
+          });
+          // Sort newest first
+          list.sort((a, b) => b.id.localeCompare(a.id));
+          setWishes(list);
+        }
+      },
+      (error) => {
+        console.warn('Firestore wishes listener:', error);
+      }
+    );
 
-  // Track additional virtual gifts sent by users
-  const [extraGifts, setExtraGifts] = useState<Record<string, number>>(() => {
-    try {
-      localStorage.removeItem('vica_wisuda_gifts');
-      const saved = localStorage.getItem('vica_wisuda_gifts_extra');
-      return saved ? JSON.parse(saved) : {};
-    } catch {
-      return {};
-    }
-  });
+    return () => unsubscribe();
+  }, []);
 
-  // Track deleted wish IDs
-  const [deletedWishIds, setDeletedWishIds] = useState<string[]>(() => {
-    try {
-      const saved = localStorage.getItem('vica_wisuda_deleted_ids');
-      return saved ? JSON.parse(saved) : [];
-    } catch {
-      return [];
-    }
-  });
+  // Subscribe to real-time Firestore updates for Virtual Gifts
+  useEffect(() => {
+    const giftsRef = collection(db, 'gifts');
+    const unsubscribe = onSnapshot(
+      giftsRef,
+      (snapshot) => {
+        if (snapshot.empty) {
+          // Seed gifts
+          INITIAL_GIFTS.forEach((gift) => {
+            setDoc(doc(db, 'gifts', gift.id), {
+              count: gift.count,
+              name: gift.name,
+              icon: gift.icon,
+            }).catch(() => {});
+          });
+        } else {
+          const map = new Map<string, number>();
+          snapshot.docs.forEach((d) => {
+            map.set(d.id, Number(d.data().count ?? 10));
+          });
+          setGifts(
+            INITIAL_GIFTS.map((g) => ({
+              ...g,
+              count: map.get(g.id) ?? g.count,
+            }))
+          );
+        }
+      },
+      (error) => {
+        console.warn('Firestore gifts listener:', error);
+      }
+    );
 
-  // Combined wishes: custom user wishes on top, followed by current INITIAL_WISHES
-  const wishes: Wish[] = [
-    ...customWishes.map((w) => ({
-      ...w,
-      likes: (w.likes || 1) + (likesMap[w.id] || 0),
-    })),
-    ...INITIAL_WISHES.map((w) => ({
-      ...w,
-      likes: (w.likes || 1) + (likesMap[w.id] || 0),
-    })),
-  ].filter((w) => !deletedWishIds.includes(w.id));
-
-  // Combined gifts with base counts from INITIAL_GIFTS plus user interaction
-  const gifts: VirtualGift[] = INITIAL_GIFTS.map((g) => ({
-    ...g,
-    count: g.count + (extraGifts[g.id] || 0),
-  }));
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     document.title = "Vica's Grad Inv";
@@ -192,39 +241,37 @@ export default function App() {
     }
   };
 
-  const handleSendGift = (giftId: string) => {
-    setExtraGifts((prev) => {
-      const updated = { ...prev, [giftId]: (prev[giftId] || 0) + 1 };
-      try {
-        localStorage.setItem('vica_wisuda_gifts_extra', JSON.stringify(updated));
-      } catch {
-        // Ignore
-      }
-      return updated;
-    });
+  const handleSendGift = async (giftId: string) => {
+    // Optimistic local update
+    setGifts((prev) =>
+      prev.map((g) => (g.id === giftId ? { ...g, count: g.count + 1 } : g))
+    );
     fireConfetti(0.5, 0.7);
     if (soundEnabled) {
       playPopSound();
     }
+    // Remote Firestore write
+    try {
+      await setDoc(
+        doc(db, 'gifts', giftId),
+        { count: increment(1) },
+        { merge: true }
+      );
+    } catch (e) {
+      console.warn('Gift sync error:', e);
+    }
   };
 
-  const handleAddWish = (newWishData: Omit<Wish, 'id' | 'timestamp' | 'likes'>) => {
+  const handleAddWish = async (newWishData: Omit<Wish, 'id' | 'timestamp' | 'likes'>) => {
+    const tempId = 'w_' + Date.now();
     const newWish: Wish = {
       ...newWishData,
-      id: 'w_' + Date.now(),
+      id: tempId,
       timestamp: 'Baru saja',
       likes: 1,
     };
-    setHighlightedWishId(newWish.id);
-    setCustomWishes((prev) => {
-      const updated = [newWish, ...prev];
-      try {
-        localStorage.setItem('vica_wisuda_custom_wishes', JSON.stringify(updated));
-      } catch {
-        // Ignore
-      }
-      return updated;
-    });
+    setHighlightedWishId(tempId);
+    setWishes((prev) => [newWish, ...prev]);
     fireConfetti(0.5, 0.5);
     if (soundEnabled) {
       playCelebrationSound();
@@ -238,48 +285,48 @@ export default function App() {
     setTimeout(() => {
       setHighlightedWishId(null);
     }, 4500);
-  };
 
-  const handleLikeWish = (wishId: string) => {
-    setLikesMap((prev) => {
-      const updated = { ...prev, [wishId]: (prev[wishId] || 0) + 1 };
-      try {
-        localStorage.setItem('vica_wisuda_likes', JSON.stringify(updated));
-      } catch {
-        // Ignore
-      }
-      return updated;
-    });
-    if (soundEnabled) {
-      playPopSound();
+    // Persist to Firestore
+    try {
+      const docRef = await addDoc(collection(db, 'wishes'), {
+        name: newWishData.name,
+        attendance: newWishData.attendance,
+        message: newWishData.message,
+        emoji: newWishData.emoji,
+        likes: 1,
+        createdAt: new Date().toISOString(),
+      });
+      setHighlightedWishId(docRef.id);
+    } catch (e) {
+      console.warn('Wish sync error:', e);
     }
   };
 
-  const handleDeleteWish = (wishId: string) => {
-    // Remove from custom wishes if present
-    setCustomWishes((prev) => {
-      const updated = prev.filter((w) => w.id !== wishId);
-      try {
-        localStorage.setItem('vica_wisuda_custom_wishes', JSON.stringify(updated));
-      } catch {
-        // Ignore
-      }
-      return updated;
-    });
-
-    // Mark as deleted so even default wishes can be dismissed
-    setDeletedWishIds((prev) => {
-      const updated = [...prev, wishId];
-      try {
-        localStorage.setItem('vica_wisuda_deleted_ids', JSON.stringify(updated));
-      } catch {
-        // Ignore
-      }
-      return updated;
-    });
-
+  const handleLikeWish = async (wishId: string) => {
+    setWishes((prev) =>
+      prev.map((w) => (w.id === wishId ? { ...w, likes: w.likes + 1 } : w))
+    );
     if (soundEnabled) {
       playPopSound();
+    }
+    try {
+      await updateDoc(doc(db, 'wishes', wishId), {
+        likes: increment(1),
+      });
+    } catch (e) {
+      console.warn('Like sync error:', e);
+    }
+  };
+
+  const handleDeleteWish = async (wishId: string) => {
+    setWishes((prev) => prev.filter((w) => w.id !== wishId));
+    if (soundEnabled) {
+      playPopSound();
+    }
+    try {
+      await deleteDoc(doc(db, 'wishes', wishId));
+    } catch (e) {
+      console.warn('Delete sync error:', e);
     }
   };
 

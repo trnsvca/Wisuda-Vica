@@ -1,0 +1,74 @@
+{
+  "entities": {
+    "Wish": {
+      "title": "Wish",
+      "description": "Graduation wishes and RSVP attendance notes from guests",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "Guest name"
+        },
+        "attendance": {
+          "type": "string",
+          "enum": ["dateng", "usahakan", "doa"],
+          "description": "Attendance status"
+        },
+        "message": {
+          "type": "string",
+          "maxLength": 1000,
+          "description": "Wish message or congratulations text"
+        },
+        "emoji": {
+          "type": "string",
+          "maxLength": 16,
+          "description": "Selected sticker reaction"
+        },
+        "likes": {
+          "type": "number",
+          "description": "Number of likes received"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "ISO timestamp of creation"
+        }
+      },
+      "required": ["name", "attendance", "message", "emoji"]
+    },
+    "GiftCounter": {
+      "title": "GiftCounter",
+      "description": "Virtual gift counters sent by guests",
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "number",
+          "description": "Total count of virtual gift sent"
+        },
+        "name": {
+          "type": "string",
+          "description": "Gift item name"
+        },
+        "icon": {
+          "type": "string",
+          "description": "Gift emoji icon"
+        }
+      },
+      "required": ["count"]
+    }
+  },
+  "firestore": {
+    "/wishes/{wishId}": {
+      "schema": {
+        "$ref": "#/entities/Wish"
+      },
+      "description": "Public guestbook wishes and RSVP status for Vica's graduation"
+    },
+    "/gifts/{giftId}": {
+      "schema": {
+        "$ref": "#/entities/GiftCounter"
+      },
+      "description": "Real-time counts for virtual gifts"
+    }
+  }
+}
