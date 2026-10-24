@@ -26,12 +26,15 @@ export const EventCards: React.FC<EventCardsProps> = ({ onOpenMapGuide }) => {
         <div className="flex items-center gap-2">
           <Clock className="w-4 h-4 text-[#1b1b4b]" />
           <small className="block text-[12px] sm:text-[13px] tracking-[2.5px] font-bold uppercase text-[#1b1b4b]">
-            JAM
+            JAM KUNJUNGAN
           </small>
         </div>
         <strong className="block text-xl sm:text-2xl md:text-[26px] leading-tight font-extrabold mt-0.5">
           13.00 – 14.30 WIB
         </strong>
+        <p className="text-xs font-bold text-[#1b1b4b]/85 mt-1 leading-snug">
+          Boleh datang lebih awal (sebelum 12.00 WIB) kalau mau lihat arak-arakan! 🎉
+        </p>
       </div>
 
       {/* Location Card */}
